@@ -8,19 +8,11 @@ fc=211011*4;
 fs2=15e6;%we set the sampling rate of the carrier signal to 15MHz
 t2=0:1/fs2:0.001;
 %%
-f=sin(2*pi*2*10e3*t1)+sin(2*pi*3*10e3*t1);%the signal to be moduled
+f=sin(2*pi*2*10e3*t)+sin(2*pi*3*10e3*t);%the signal to be moduled
 figure(1)
-plot(t1/0.001,f);
+plot(t,f);
 title('Wave of the signal to be moduled');
-xlabel("n");
+xlabel("t/s");
 ylabel("Amp");
 %%
-c=cos(2*pi*fc*t2);%Carrier Signal
-figure(2)
-plot(t2/0.001,c);
-title('Wave of the carrier signal');
-xlabel("n");
-ylabel("Amp");
-%%
-%DSB Modulation
-%to be continued
+c=cos(2*pi*fc*t);%Carrier Signal
