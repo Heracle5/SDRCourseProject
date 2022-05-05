@@ -24,3 +24,16 @@ ylabel("Amp");
 %%
 %DSB Modulation
 %to be continued
+m=sin(2*pi*2*10e3*t2)+sin(2*pi*3*10e3*t2);
+s=m.*c;
+figure(3)
+plot(t2/0.001,s,t2/0.001,m,"r-");
+title('Wave of the moduled signal');
+xlabel('n');
+ylabel("Amp");
+legend('Modulated Message Signal','Message Signal m(n)')
+%%
+%I side and Q side Modulation
+I=s;%I sideroad
+Q=0;% Q sideroad
+
