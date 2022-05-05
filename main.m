@@ -2,6 +2,8 @@
 %We create a digital transmiter and receiver based on DSB Module
 %%
 %Init parameter setting
+clear all
+clc
 fs1=150e3;%we set the sampling rate of the f to 150kHz
 t1=0:1/fs1:0.001;
 fc=211011*4;
