@@ -64,52 +64,18 @@ ylabel('|I(f)|');
 %Receiver part
 %%
 %Costas环
-fs3=12e6;  %采样频率
-ts3=1/fs3;
-num=2.5e6;%数据长度
-data=Tx;%科斯塔斯环的输入信号
-fc=35628000;  %本地频率
-n=fs3/1000;  %累积时间为1ms
-nn=[0:n-1];
-nf=floor(length(data)/n);%将输入数据分成1ms的多个数据块
-wfc=2*pi*fc;  %本地信号
-phi_prv=0;
-temp=0;
-frame=0;
-carrier_phase=0;
-phase=0;
-
-%环路滤波器的参数
-c1=153.7130;
-c2=6.1498;
-
-for frame=1:nf
-    %产生本地的sin和cos函数
-    expcol=exp(j*(wfc*ts3*nn+phase));
-    sine=imag(expcol);
-    cosine=real(expcol);
-    
-    x=data((1:n)+(frame-1)*n);
-    %将数据转换到基带
-    x_sine=x.*sine;
-    x_cosine=x.*cosine;
-    Q=sum(x_sine);
-    I=sum(x_cosine);
-    phase_discri(frame)=atan(Q/I);  %得到锁相环的输入
-    
-    %锁相环
-    dfrq=c1*phase_discri(frame)+temp; %经过环路滤波器
-    temp=temp+c2*phase_discri(frame); 
-    wfc=wfc-dfrq*2*pi;  %改变本地频率
-    dfrq_frame(frame)=wfc;
-    phase=wfc*ts3*n+phase; %得到不同块的频率
-    
-end
-plot(dfrq_frame/(2*pi),'b');
-hold on;
-dfrq_frame_len=length(dfrq_frame);
-plot([1:dfrq_frame_len],real_fc*ones(dfrq_frame_len),'r');
-legend('锁相环跟踪','实际的载波频率');
-grid;
-mean_freq=mean(dfrq_frame/2/pi);
-p=abs(real_fc-mean_freq)/real_fc;  %相对误差
+fs3=15e6;
+f=fc;
+phi_hat(1)=30;
+e(1)=0;
+phd_output(1)=0;
+vco(1)=0;
+kp=0.15;
+ki=0.1;
+for n=2:length(Tx)
+vco(n)=conj(exp(j*(2*pi*n*f/fs3+phi_hat(n-1))));
+phd_output(n)=imag(Tx(n)*vco(n));
+e(n)=e(n-1)+(kp+ki)*phd_output(n)-ki*phd_output(n-1);
+phi_hat(n)=phi_hat(n-1)+e(n);
+end;
+freq
