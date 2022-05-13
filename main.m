@@ -18,22 +18,46 @@ plot(t1,f);
 title('Wave of the signal to be moduled');
 xlabel("n");
 ylabel("Amp");
+N=length(f);
+If=abs(fftshift(fft(f,N)));%fft
+fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
+figure(7)
+plot(fi,If);
+title('基带信号采样后双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
 %%
 %Interp
 f=interp(f,fs2/fs1);
-f=filter(Num,1,f);
+N=length(f);
+If=abs(fftshift(fft(f,N)));%fft
+fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
 figure(2)
+plot(fi,If);
+title('基带信号采样率变换后双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
+f=filter(Num,1,f);
+figure(3)
 plot(t2,f);
-title('Wave of the interp signal');
+title('Wave of the filtered interp signal');
 xlabel("n");
 ylabel("Amp");
+N=length(f);
+If=abs(fftshift(fft(f,N)));%fft
+fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
+figure(4)
+plot(fi,If);
+title('基带信号采样率变换后经由DLPF滤波后双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
 %%
 %I side and Q side Modulation
 I=f;%I sideroad
 Q=0;% Q sideroad
 %%
 c=cos(2*pi*fc*t2);%Carrier Signal
-figure(3)
+figure(5)
 plot(t2,c);
 title('Wave of the carrier signal');
 xlabel("n");
@@ -42,20 +66,21 @@ ylabel("Amp");
 %DSB Modulation
 %to be continued
 s=f.*c;
-figure(4)
+figure(6)
 plot(t2/0.001,s,t2/0.001,f,"r-");
 title('Wave of the moduled signal');
 xlabel('n');
 ylabel("Amp");
 legend('Modulated Message Signal','Message Signal m(n)')
 %%
-Tx=s+Q;
+%DA module
+Tx=interp(s+Q,5);
 %%
 %drawing the spectum of the signal
 N=length(Tx);
 If=abs(fftshift(fft(Tx,N)));%fft
-fi=fs2*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-figure(5)
+fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+figure(7)
 plot(fi,If);
 title('发送信号双边频域图像')
 xlabel('rad');
@@ -64,12 +89,12 @@ ylabel('|I(f)|');
 %Receiver part
 %%
 %Costas环
-mix=Tx.*cos(2*pi*fc*t2);
-N=length(mix);
-If=abs(fftshift(fft(mix,N)));%fft
-fi=fs2*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-figure(6)
-plot(fi,If);
-title('发送信号双边频域图像')
-xlabel('rad');
-ylabel('|I(f)|');
+% mix=Tx.*cos(2*pi*fc*t2);
+% N=length(mix);
+% If=abs(fftshift(fft(mix,N)));%fft
+% fi=fs2*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+% figure(8)
+% plot(fi,If);
+% title('发送信号双边频域图像')
+% xlabel('rad');
+% ylabel('|I(f)|');
