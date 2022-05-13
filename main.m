@@ -124,6 +124,7 @@ plot(ts3,Signal_filter);
 title('滤波后信号时域图像')
 xlabel('rad');
 ylabel('|I(f)|');
+Signal_filter=downsample(Signal_filter,5);
 %%
 %Costas环
 % mix=Tx.*cos(2*pi*fc*t2);
