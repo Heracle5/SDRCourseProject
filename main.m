@@ -10,6 +10,8 @@ fc=211011*4;
 fs2=15e6;%we set the sampling rate of the carrier signal to 15MHz
 t2=0:1/fs2:0.01-1/fs2;
 load filteralpha.mat;
+load filterbeta.mat;
+load filtergamma.mat;
 %%
 f=sin(2*pi*2*10e2*t1)+sin(2*pi*3*10e2*t1);%the signal to be moduled
 %f=filter(Num,1,f);%add a reshape filter
@@ -87,6 +89,41 @@ xlabel('rad');
 ylabel('|I(f)|');
 %%
 %Receiver part
+ts3=0:1/(fs2*5):0.01-1/(fs2*5);
+Rx=filter(Num1, 1, Tx);
+N=length(Rx);
+If=abs(fftshift(fft(Rx,N)));%fft
+fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+figure(8)
+plot(fi,If);
+title('发送信号双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
+%mix freq
+Signal_mix=Rx.*cos(2*pi*386600*ts3);
+N=length(Signal_mix);
+If=abs(fftshift(fft(Signal_mix,N)));%fft
+fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+figure(9)
+plot(fi,If);
+title('发送信号双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
+%filter
+Signal_filter=filter(Num2,1,Signal_mix);
+N=length(Signal_filter);
+If=abs(fftshift(fft(Signal_filter,N)));%fft
+fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+figure(10)
+plot(fi,If);
+title('发送信号双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
+figure(11)
+plot(ts3,Signal_filter);
+title('滤波后信号时域图像')
+xlabel('rad');
+ylabel('|I(f)|');
 %%
 %Costas环
 % mix=Tx.*cos(2*pi*fc*t2);
