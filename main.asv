@@ -87,7 +87,7 @@ N=length(Tx);
 If=abs(fftshift(fft(Tx,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
 %fi=(0:N-1)*fs1/N-fs1/2 ;
-fi=((0:N-1)*fs2*5/N-fs2*5/2);
+fi=((0:N-1)*1/N-1/2)*2*pi;
 figure(8)
 plot(fi,If);
 title('发送信号双边频域图像')
@@ -104,18 +104,18 @@ If=abs(fftshift(fft(Rx,N)));%fft
 fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
 figure(9)
 plot(fi,If);
-title('发送信号经由选频滤波器后的双边频域图像')
+title('发送信号双边频域图像')
 xlabel('rad');
 ylabel('|I(f)|');
 %mix freq
-Signal_mix=Rx.*cos(2*pi*389044*ts3);
+Signal_mix=Rx.*cos(2*pi*386600*ts3);
 N=length(Signal_mix);
 If=abs(fftshift(fft(Signal_mix,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
 fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
 figure(10)
 plot(fi,If);
-title('混频后信号双边频域图像')
+title('发送信号双边频域图像')
 xlabel('rad');
 ylabel('|I(f)|');
 %filter
@@ -126,7 +126,7 @@ If=abs(fftshift(fft(Signal_filter,N)));%fft
 fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
 figure(11)
 plot(fi,If);
-title('中频滤波后信号双边频域图像')
+title('发送信号双边频域图像')
 xlabel('rad');
 ylabel('|I(f)|');
 figure(12)
