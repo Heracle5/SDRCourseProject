@@ -11,7 +11,7 @@ fs2=15e6;%we set the sampling rate of the carrier signal to 15MHz
 t2=0:1/fs2:0.01-1/fs2;
 load filteralpha.mat;
 load filterbeta.mat;
-load filtergamma.mat;
+load filtertest.mat;
 %%
 f=sin(2*pi*2*10e2*t1)+sin(2*pi*3*10e2*t1);%the signal to be moduled
 %f=filter(Num,1,f);%add a reshape filter
@@ -31,7 +31,7 @@ xlabel('*pi rad');
 ylabel('|I(f)|');
 %%
 %Interp
-f=interp(f,fs2/fs1);
+f=(fs1/fs2)*interp(f,fs2/fs1);
 N=length(f);
 If=abs(fftshift(fft(f,N)));%fft
 %fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
@@ -80,7 +80,7 @@ ylabel("Amp");
 legend('Modulated Message Signal','Message Signal m(n)')
 %%
 %DA module
-Tx=interp(s+Q,5);
+Tx=(1/5)*interp(s+Q,5);
 %%
 %drawing the spectum of the signal
 N=length(Tx);
