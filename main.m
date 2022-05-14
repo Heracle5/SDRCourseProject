@@ -41,7 +41,8 @@ plot(fi,If);
 title('基带信号采样率变换后双边频域图像')
 xlabel('rad');
 ylabel('|I(f)|');
-f=filter(Num,1,f);
+[b,a]=sos2tf(SOS,G);
+f=filter(b,a,f);
 figure(4)
 plot(t2,f);
 title('Wave of the filtered interp signal');
@@ -50,7 +51,7 @@ ylabel("Amp");
 N=length(f);
 If=abs(fftshift(fft(f,N)));%fft
 %fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2/N-fs2/2 ;
+fi=(0:N-1)*fs1/N-fs1/2 ;
 figure(5)
 plot(fi,If);
 title('基带信号采样率变换后经由DLPF滤波后双边频域图像')
