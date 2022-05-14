@@ -119,7 +119,8 @@ title('混频后信号双边频域图像')
 xlabel('rad');
 ylabel('|I(f)|');
 %filter
-Signal_filter=filter(Num2,1,Signal_mix);
+[b,a]=sos2tf(SOS2,G2);
+Signal_filter=filter(b,a,Signal_mix);
 N=length(Signal_filter);
 If=abs(fftshift(fft(Signal_filter,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
@@ -134,7 +135,16 @@ plot(ts3,Signal_filter);
 title('滤波后信号时域图像')
 xlabel('rad');
 ylabel('|I(f)|');
-Signal_filter=downsample(Signal_filter,5);
+Signal_down=downsample(Signal_filter,5);
+N=length(Signal_down);
+If=abs(fftshift(fft(Signal_down,N)));%fft
+%fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+fi=(0:N-1)*fs2/N-fs2/2 ;
+figure(13)
+plot(fi,If);
+title('AD后信号双边频域图像')
+xlabel('rad');
+ylabel('|I(f)|');
 %%
 %Costas环
 % mix=Tx.*cos(2*pi*fc*t2);
