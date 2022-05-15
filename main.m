@@ -137,45 +137,45 @@ plot(ts3,Signal_filter);
 title('滤波后信号时域图像')
 xlabel('rad');
 ylabel('|I(f)|');
-% Signal_down=5*downsample(Signal_filter,5);
-% N=length(Signal_down);
-% If=abs(fftshift(fft(Signal_down,N)));%fft
-% %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-% fi=(0:N-1)*2/N-2/2 ;
-% figure(13)
-% plot(fi,If);
-% title('AD后信号双边频域图像')
-% xlabel('*pi rad');
-% ylabel('|I(f)|');
+Signal_down=downsample(Signal_filter,6);
+N=length(Signal_down);
+If=abs(fftshift(fft(Signal_down,N)));%fft
+%fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
+fi=(0:N-1)*fs2/N-fs2/2 ;
+figure(13)
+plot(fi,If);
+title('AD后信号双边频域图像')
+xlabel('*pi rad');
+ylabel('|I(f)|');
 %%
-I=Signal_filter.*cos(2*pi*455000*ts3);
+I=Signal_down.*cos(2*pi*455000*t2);
 N=length(I);
 If=abs(fftshift(fft(I,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2*6/N-fs2*6/2 ;
+fi=(0:N-1)*fs2/N-fs2/2 ;
 figure(14)
 plot(fi,If);
 title('I路解调信号双边频域图像')
 xlabel('Hz');
 ylabel('|I(f)|');
 %%
-Q=Signal_filter.*-sin(2*pi*455000*ts3);
+Q=-Signal_down.*sin(2*pi*455000*t2);
 N=length(Q);
 If=abs(fftshift(fft(Q,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2*6/N-fs2*6/2 ;
+fi=(0:N-1)*fs2/N-fs2/2 ;
 figure(15)
 plot(fi,If);
 title('Q路解调信号双边频域图像')
 xlabel('Hz');
 ylabel('|I(f)|');
 %%
-% 高效的抽取结构D=6 HB(3)+FIR(2)
+% 高效的抽取结构D=100 CIC(25)+HB(4)+FIR(1)
 I=Hm(I')';
 N=length(I);
 If=abs(fftshift(fft(I,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2*2/N-fs2*2/2 ;
+fi=(0:N-1)*fs1*4/N-fs1*4/2 ;
 figure(16)
 plot(fi,If);
 title('I路解调信号CIC后双边频域图像')
@@ -186,16 +186,16 @@ Q=Hm(Q')';
 N=length(Q);
 If=abs(fftshift(fft(Q,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2*2/N-fs2*2/2 ;
+fi=(0:N-1)*fs2*4/N-fs2*4/2 ;
 figure(17)
 plot(fi,If);
 title('Q路解调信号CIC后双边频域图像')
 xlabel('Hz');
 ylabel('|I(f)|');
 %%
-b = firhalfband('minorder',.45,0.0063133);
+b = firhalfband('minorder',.45,0.005);
 I=filter(b,1,I);
-I=downsample(I,2);
+I=downsample(I,4);
 N=length(I);
 If=abs(fftshift(fft(I,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
@@ -208,7 +208,7 @@ ylabel('|I(f)|');
 %%
 b = firhalfband('minorder',.45,0.0063133);
 Q=filter(b,1,Q);
-Q=downsample(Q,2);
+Q=downsample(Q,4);
 N=length(Q);
 If=abs(fftshift(fft(Q,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
@@ -245,16 +245,16 @@ ylabel('|I(f)|');
 %平方开方所得的
 result=sqrt(Q.^2+I.^2);
 figure(22)
-plot(t2,result);
+plot(t1,result);
 title('平方开方后时域图像')
 xlabel('t');
 ylabel('Amp');
 %%
 %相位估计再补偿
 Theta=atan(Q/I);
-Z=-6*(I*cos(Theta)+Q*sin(Theta))+j*(Q*cos(Theta)-I*sin(Theta));
+Z=-1/6*(I*cos(Theta)+Q*sin(Theta))+j*(Q*cos(Theta)-I*sin(Theta));
 figure(23)
-plot(t2,Z);
+plot(t1,Z);
 title('相位估计再补偿后时域图像')
 xlabel('t');
 ylabel('Amp');
