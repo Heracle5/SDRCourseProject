@@ -23,7 +23,7 @@ ylabel("Amp");
 N=length(f);
 If=abs(fftshift(fft(f,N)));%fft
 %fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=((0:N-1)*1/N-1/2) ;
+fi=2*((0:N-1)*1/N-1/2) ;
 figure(2)
 plot(fi,If);
 title('基带信号采样后双边频域图像')
@@ -39,7 +39,7 @@ fi=2*((0:N-1)*1/N-1/2) ;
 figure(3)
 plot(fi,If);
 title('基带信号采样率变换后双边频域图像')
-xlabel('rad');
+xlabel('*pi rad');
 ylabel('|I(f)|');
 [b,a]=sos2tf(SOS,G);
 f=filter(b,a,f);
@@ -51,11 +51,11 @@ ylabel("Amp");
 N=length(f);
 If=abs(fftshift(fft(f,N)));%fft
 %fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=fs2*((0:N-1)*1/N-1/2) ;
+fi=2*((0:N-1)*1/N-1/2) ;
 figure(5)
 plot(fi,If);
 title('基带信号采样率变换后经由DLPF滤波后双边频域图像')
-xlabel('rad');
+xlabel('*pi rad');
 ylabel('|I(f)|');
 %%
 %I side and Q side Modulation
@@ -91,7 +91,7 @@ fi=((0:N-1)*fs2*5/N-fs2*5/2);
 figure(8)
 plot(fi,If);
 title('发送信号双边频域图像')
-xlabel('rad');
+xlabel('Hz');
 ylabel('|I(f)|');
 %%
 %Receiver part
@@ -105,18 +105,18 @@ fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
 figure(9)
 plot(fi,If);
 title('发送信号经由选频滤波器后的双边频域图像')
-xlabel('rad');
+xlabel('Hz');
 ylabel('|I(f)|');
 %mix freq
 Signal_mix=Rx.*cos(2*pi*389044*ts3);
 N=length(Signal_mix);
 If=abs(fftshift(fft(Signal_mix,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*2/N-2/2 ;
+fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
 figure(10)
 plot(fi,If);
 title('混频后信号双边频域图像')
-xlabel('rad');
+xlabel('Hz');
 ylabel('|I(f)|');
 %filter
 [b,a]=sos2tf(SOS2,G2);
@@ -128,7 +128,7 @@ fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
 figure(11)
 plot(fi,If);
 title('中频滤波后信号双边频域图像')
-xlabel('rad');
+xlabel('Hz');
 ylabel('|I(f)|');
 figure(12)
 plot(ts3,Signal_filter);
@@ -139,11 +139,11 @@ Signal_down=downsample(Signal_filter,5);
 N=length(Signal_down);
 If=abs(fftshift(fft(Signal_down,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2/N-fs2/2 ;
+fi=(0:N-1)*2/N-2/2 ;
 figure(13)
 plot(fi,If);
 title('AD后信号双边频域图像')
-xlabel('rad');
+xlabel('*pi rad');
 ylabel('|I(f)|');
 %%
 %Costas环
