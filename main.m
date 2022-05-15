@@ -11,7 +11,7 @@ fs2=15e6;%we set the sampling rate of the carrier signal to 15MHz
 t2=0:1/fs2:0.01-1/fs2;
 load filteralpha.mat;
 load filterbeta.mat;
-load filtertest.mat;
+load filtergamma.mat;
 %%
 f=sin(2*pi*2*10e2*t1)+sin(2*pi*3*10e2*t1);%the signal to be moduled
 %f=filter(Num,1,f);%add a reshape filter
@@ -31,7 +31,7 @@ xlabel('*pi rad');
 ylabel('|I(f)|');
 %%
 %Interp
-f=(fs1/fs2)*interp(f,fs2/fs1);
+f=interp(f,fs2/fs1);
 N=length(f);
 If=abs(fftshift(fft(f,N)));%fft
 %fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
@@ -51,7 +51,7 @@ ylabel("Amp");
 N=length(f);
 If=abs(fftshift(fft(f,N)));%fft
 %fi=(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=2*((0:N-1)*1/N-1/2) ;
+fi=fs2*((0:N-1)*1/N-1/2) ;
 figure(5)
 plot(fi,If);
 title('基带信号采样率变换后经由DLPF滤波后双边频域图像')
@@ -80,7 +80,7 @@ ylabel("Amp");
 legend('Modulated Message Signal','Message Signal m(n)')
 %%
 %DA module
-Tx=(1/5)*interp(s+Q,5);
+Tx=interp(s+Q,5);
 %%
 %drawing the spectum of the signal
 N=length(Tx);
@@ -112,7 +112,7 @@ Signal_mix=Rx.*cos(2*pi*389044*ts3);
 N=length(Signal_mix);
 If=abs(fftshift(fft(Signal_mix,N)));%fft
 %fi=fs2*5*(-N/2:N/2-1)/N;%digital freq=analog freq*T
-fi=(0:N-1)*fs2*5/N-fs2*5/2 ;
+fi=(0:N-1)*2/N-2/2 ;
 figure(10)
 plot(fi,If);
 title('混频后信号双边频域图像')
